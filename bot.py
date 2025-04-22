@@ -1,10 +1,9 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, Bot, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
 import requests
-from urllib3 import request
 
 # Токен вашего бота
-TOKEN = "7953058204:AAH-CB85t4jy8JEovaGvOTDUNXP_vcGMpgA"
+TOKEN = "7693189579:AAEdz8QnX1uZlpo14ZMqhcJ1l_PQy86_4J4"
 url = "https://catfact.ninja/fact"
 bot = Bot(token=TOKEN)
 darsik_id = 1492493203
@@ -75,6 +74,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("дура")
     elif "хочу сосиску в тесте" in text:
         await update.message.reply_text(f"Будет сосиска из виорда для {user_name}")
+
+        from telegram import Update
+        from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+        async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+            await update.message.reply_text("Привет! Я бот.")
+
+        app = ApplicationBuilder().token("YOUR_TOKEN").build()
+        app.add_handler(CommandHandler("start", start))
+        app.run_polling()
     elif "чозабретта" in text:
         await update.message.reply_photo("sobaka.png")
     elif "уебище" in text:
