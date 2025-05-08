@@ -46,6 +46,21 @@ async def verify_jwt_token(token: str = Depends(oauth2_scheme), db: Session = De
         raise credentials_exception
 
 
+async def verify_temp_token(token: str = Depends(oauth2_scheme)) -> dict:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid or expired temporary token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if "token_id" not in payload:
+            raise credentials_exception
+        return payload
+    except JWTError:
+        raise credentials_exception
+
+
 router = APIRouter()
 
 @router.post("/send_code")
@@ -66,7 +81,7 @@ async def send_code(data: CodeToken, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/verify", response_model=Token)
-async def verify_user(data: FlagConfirm, db: Session = Depends(get_db)):
+async def verify_user(data: FlagConfirm, _: dict = Depends(verify_temp_token), db: Session = Depends(get_db)):
     if data.flag == "SUCCESS_ACCESS":
         user = get_user_by_phone(db, data.phone)
         if user is None:
