@@ -9,7 +9,7 @@ from backend.db import get_db
 from backend.models.user import User
 from dotenv import load_dotenv
 import os
-from routers.token import verify_temp_token
+from backend.api.routers.token import verify_temp_token
 router = APIRouter()
 
 @router.get("/get_users", response_model=List[Users])

@@ -64,7 +64,7 @@ async def verify_temp_token(token: str = Depends(oauth2_scheme)) -> dict:
 router = APIRouter()
 
 @router.post("/send_code")
-async def send_code(data: CodeToken, db: Session = Depends(get_db)):
+async def send_code(data: CodeToken, _: dict = Depends(verify_temp_token), db: Session = Depends(get_db)):
 
     user = get_user_by_phone(db, data.phone)
     try:
