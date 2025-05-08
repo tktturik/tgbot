@@ -36,7 +36,7 @@ def setup_bot_handlers():
 
 
 def create_api():
-    fastApiApp = FastAPI()
+    fastApiApp = FastAPI(root_path="/api")
     fastApiApp.include_router(token.router)
     fastApiApp.include_router(users.router)
 
