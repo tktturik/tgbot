@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_API = os.getenv('BASE_API')
+ROOT_PATH = os.getenv('ROOT_PATH')
 
 def setup_bot_handlers():
 
@@ -36,7 +37,7 @@ def setup_bot_handlers():
 
 
 def create_api():
-    fastApiApp = FastAPI(root_path="/api")
+    fastApiApp = FastAPI(root_path=ROOT_PATH)
     fastApiApp.include_router(token.router)
     fastApiApp.include_router(users.router)
 
