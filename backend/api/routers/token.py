@@ -11,6 +11,8 @@ from backend.db import SessionLocal
 from fastapi import Depends
 from backend.db import get_db
 from jose import jwt, JWTError
+from datetime import datetime, timedelta
+from uuid import uuid4
 
 
 
@@ -82,6 +84,20 @@ async def get_current_user(token: Token = Depends(verify_jwt_token)):
         "answer":"success"
     }
 
+
+@router.get("/temporary_token")
+async def get_temporary_token() -> dict:
+    duration_minutes = 10
+    try:
+        expire = datetime.utcnow() + timedelta(minutes=duration_minutes)
+        data = {
+            "exp": expire,
+            "token_id": str(uuid4()) 
+        }
+        token = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+        return {"temporary_token": token}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
         
 
 
