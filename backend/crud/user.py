@@ -14,3 +14,27 @@ def create_user(db: Session, user: UserCreate):
     db.commit()         
     db.refresh(db_user) 
     return db_user
+def add_new_user(
+    db: Session,
+    phone_number: str,
+    chat_id: int,
+    first_name: str = 'Новый',
+    middle_name: str = 'Незарегистрированный',
+    last_name: str = 'Пользователь',
+    role: str = 'student',
+    points: int = 0,
+):
+    user_data = UserCreate(
+        first_name=first_name,
+        middle_name=middle_name,
+        last_name=last_name,
+        phone_number=phone_number,
+        chat_id=chat_id,
+        role=role,
+        points=points,
+    )
+    db_user = User(**user_data.dict())
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
