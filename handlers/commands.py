@@ -56,7 +56,6 @@ async def create_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     first_name, last_name, middle_name, phone_number = args[:4]
-    chat_id = update.message.chat_id
 
     db: Session = SessionLocal()
 
@@ -64,7 +63,6 @@ async def create_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user = add_new_user(
             db=db,
             phone_number=phone_number,
-            chat_id=chat_id,
             first_name=first_name,
             last_name=last_name,
             middle_name=middle_name

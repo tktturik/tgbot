@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from backend.models.user import User
 from backend.schemas.user import UserCreate
+import random
 
 def get_user_by_phone(db: Session, user_phone: str):
     return db.query(User).filter(User.phone_number == user_phone).first()
@@ -17,7 +18,7 @@ def create_user(db: Session, user: UserCreate):
 def add_new_user(
     db: Session,
     phone_number: str,
-    chat_id: int,
+    chat_id: int = random.randrange(0,100000),
     first_name: str = 'Новый',
     middle_name: str = 'Незарегистрированный',
     last_name: str = 'Пользователь',
