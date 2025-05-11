@@ -29,9 +29,11 @@ def setup_bot_handlers():
     app.add_handler(commands.but_handler)
     app.add_handler(commands.request_contact_handler)
     app.add_handler(commands.create_user_handler)
+    app.add_handler(commands.weather_handler)
+    app.add_handler(commands.set_city_handler)
 
 
-
+    
     #CallBackHandlers
 
     app.add_handler(callbacks.callback_handler)
@@ -66,3 +68,5 @@ async def start():
 
 if __name__ == "__main__":
     asyncio.run(start())
+
+

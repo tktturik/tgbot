@@ -14,6 +14,7 @@ from utils.auth import checkAuth
 
 load_dotenv()
 url = os.getenv('URL_CATS_FACTS')
+API_KEY = os.getenv('API_KEY')
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE,):
     
@@ -74,3 +75,49 @@ async def create_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         db.close()
 
 create_user_handler = CommandHandler("create_user", create_user)
+
+
+async def set_city(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    city = " ".join(context.args)
+    context.user_data["city"] = city  
+    await update.message.reply_text(f"✅ Город по умолчанию установлен: {city}")
+set_city_handler = CommandHandler("set_city",set_city)
+
+async def weather(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    
+    if context.args:
+        city = " ".join(context.args)
+    elif "city" in context.user_data:
+        city = context.user_data["city"]
+    else:
+        await update.message.reply_text(
+            "Укажите город (/weather Москва) или установите город по умолчанию (/setcity Москва)"
+        )
+        return    
+
+    url = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={city}&days=3&lang=ru"
+
+    response = requests.get(url)
+    response.raise_for_status()  
+
+    data = response.json()
+    print(data)
+    location = data['location']['name']
+    temp_c = data['current']['temp_c']
+    condition = data['current']['condition']['text']
+    feelslike = data['current']['feelslike_c']
+    humidity = data['current']['humidity']
+
+    image_url = "https:" + data['current']['condition']['icon']
+
+    weather_info = (
+        f"Погода в {location}:\n"
+        f"🌡 Температура: {temp_c}°C (ощущается как {feelslike}°C)\n"
+        f"☁ Состояние: {condition}\n"
+        f"💧 Влажность: {humidity}%"
+    )
+    await update.message.reply_text(weather_info)
+    await update.message.reply_photo(image_url)
+
+weather_handler = CommandHandler("weather",weather)
