@@ -4,7 +4,7 @@ from backend.schemas.user import UserBase
 from instance import app 
 from dotenv import load_dotenv
 import os
-from backend.crud.user import get_user_by_phone, get_user_by_chatid
+from backend.crud.user import get_user_by_phone, get_user_by_chatid,get_user_by_id
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from backend.db import SessionLocal
@@ -66,7 +66,7 @@ router = APIRouter()
 @router.post("/send_code")
 async def send_code(data: CodeToken, _: dict = Depends(verify_temp_token), db: Session = Depends(get_db)):
 
-    user = get_user_by_phone(db, data.phone)
+    user = get_user_by_id(db, data.id)
     try:
         await app.bot.send_message(
             chat_id=user.chat_id,
@@ -83,7 +83,7 @@ async def send_code(data: CodeToken, _: dict = Depends(verify_temp_token), db: S
 @router.post("/verify", response_model=Token)
 async def verify_user(data: FlagConfirm, _: dict = Depends(verify_temp_token), db: Session = Depends(get_db)):
     if data.flag == "SUCCESS_ACCESS":
-        user = get_user_by_phone(db, data.phone)
+        user = get_user_by_id(db, data.id)
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
         jwt_token = create_jwt_token(user.chat_id)

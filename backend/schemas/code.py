@@ -2,12 +2,12 @@ from pydantic import BaseModel
 from backend.schemas.user import UserBase
 
 class CodeToken(BaseModel):
-    phone: str
+    id: int
     code: str
 
 class FlagConfirm(BaseModel):
     flag: str
-    phone: str
+    id: int
 
 class Token(BaseModel):
     access_token: str

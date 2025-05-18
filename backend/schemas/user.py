@@ -26,7 +26,7 @@ class Users(BaseModel):
     first_name: str
     middle_name: str
     last_name: str
-    phone_number: str
+    id: int
 
 class User(UserBase):
     id: int
